@@ -1,24 +1,37 @@
-<?php 
+<?php
+ error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 
-include 'koneksi.php';
+ include 'config.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
-$name = $_POST['name']; 
+ $con = mysqli_connect($HostName,$HostUser,$HostPass,$DatabaseName);
 
-$checkEmail = "SELECT * from users where email = '$email'";
-$check = mysqli_fetch_array(mysqli_query($con, $checkEmail));
+ $Email = $_POST['email'];
+ 
+ $Password = $_POST['password'];
+ 
+ $Full_Name = $_POST['full_name'];
 
-if (isset($check)) {
-    echo "Email has already exist";
-} else {
-    $query = mysqli_query($con, "INSERT into users (email, password, name) values ('$email', '$password', '$name')");
+ $CheckSQL = "SELECT * FROM user WHERE email='$Email'";
+ 
+ $check = mysqli_fetch_array(mysqli_query($con,$CheckSQL));
+ 
+ if(isset($check)){
 
-    if ($query) {
-        echo "Register has been Successfully";
-    } else {
-        echo "Sorry, Something went wrong!";
-    }
+ 	echo 'Email Already Exist, Please Enter Another Email.';
+
+ }
+else{ 
+	$Sql_Query = "INSERT INTO user (email,password,full_name) values ('$Email','$Password','$Full_Name')";
+
+ if(mysqli_query($con,$Sql_Query))
+{
+ 	echo 'User Registration Successfully';
+}
+else
+ {
+ 	echo 'Something went wrong';
+ }
 }
 
-mysqli_close($con);
+ mysqli_close($con);
+?>
